@@ -8,9 +8,8 @@ set :repo_url, 'git@github.com:shiljos/blog.git'
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
 # Default deploy_to directory is /var/www/my_app
- set :ssh_options, { :forward_agent => true }
- #set :deploy_to, '/var/www/my_app'
-### after :finishing, 'deploy:cleanup'
+# set :deploy_to, '/var/www/my_app'
+
 # Default value for :scm is :git
 # set :scm, :git
 
@@ -34,33 +33,6 @@ set :repo_url, 'git@github.com:shiljos/blog.git'
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
-# 
-# 
-
-
-namespace :deploy do
-  %w[start stop restart].each do |command|
-    desc "fetch(#{command}) unicorn server"
-    task command do
-      on roles(:app) do
-        execute "/etc/init.d/unicorn_#{fetch(:application)} #{fetch(:command)}"
-      end
-    end
-end
-end
-
-# namespace :deploy do
-#   # make sure we're deploying what we think we're deploying
-#   before :deploy, "deploy:check_revision"
-#   # only allow a deploy with passing tests to deployed
-#   before :deploy, "deploy:run_tests"
-#   # compile assets locally then rsync
-#   after 'deploy:symlink:shared', 'deploy:compile_assets_locally'
-#   after :finishing, 'deploy:cleanup'
-# end
-
-
-
 
 # namespace :deploy do
 
@@ -84,3 +56,15 @@ end
 #   end
 
 # end
+
+namespace :deploy do
+    %w[start stop restart].each do |command|
+    desc "#{fetch(command)} unicorn server"
+    task command do
+      on roles(:app) do
+        execute "/etc/init.d/unicorn_#{fetch(:application)} #{fetch(command)}"
+      end
+    end
+
+    after :finishing, "deploy:cleanup"
+end
