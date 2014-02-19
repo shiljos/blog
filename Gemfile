@@ -42,6 +42,7 @@ end
 group :development do
  gem 'capistrano', '~> 3.1.0'
  gem 'capistrano-rails', '~> 1.1.0'
+ gem 'capistrano-rbenv', '~> 2.0'
 end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
